@@ -22,6 +22,16 @@ def load_csv(filename):
             data.append([float(val) for val in row])
     return data
 
-class_1 = load_csv('Iris_TTT4275/class_2')
+
+class_1 = load_csv('Iris_TTT4275/class_1')
 class_2 = load_csv('Iris_TTT4275/class_2')
-class_3 = load_csv('Iris_TTT4275/class_2')
+class_3 = load_csv('Iris_TTT4275/class_3')
+
+class_1_training = class_1[:30]
+class_1_testing = class_1[30:]
+
+class_2_training = class_2[:30]
+class_2_testing = class_2[30:]
+
+class_3_training = class_3[:30]
+class_3_testing = class_3[30:]
