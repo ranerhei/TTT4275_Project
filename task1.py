@@ -56,11 +56,26 @@ D = len(class_1[0])-1
 C = len(training_data)
 #make the weights equal to 1
 W = np.ones((C, D+1))
+# store total Mean Square Error
+MSE = 0
+
+# set of target vectors
+target_vectors = {
+     0: [1,0,0],
+     1: [0,1,0],
+     2: [0,0,1]
+}
+
+#step size, alpha
+alha = 1
 
 #iterate over every class
 for i in range(len(training_data)):
+    #define the target vector, aka correct class
+    target_vector = target_vectors.get(i, [0,0,0])
     #iterate over every data point
     for j in range(len(training_data[i])):
         #perform matrix multiplication
         print(np.dot(W,training_data[i][j]))
         print(sigmoid(np.dot(W,training_data[i][j])))
+        MSE += MSE_function(sigmoid(np.dot(W,training_data[i][j])), target_vector)
