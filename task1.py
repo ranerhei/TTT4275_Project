@@ -28,8 +28,8 @@ def load_csv(filename):
 def sigmoid(input_vector):
     return 1 / (1 + np.exp(-input_vector))
 
-        new_vector.append(1/(1+np.e**(-1*input_vector[i])))
-    return new_vector
+def MSE_function(calculated_vector, target_vector):
+    return 0.5 * np.dot(np.transpose(calculated_vector - target_vector),calculated_vector - target_vector)
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
