@@ -26,8 +26,8 @@ def load_csv(filename):
 
 #activator function
 def sigmoid(input_vector):
-    new_vector = []
-    for i in range(len(input_vector)):
+    return 1 / (1 + np.exp(-input_vector))
+
         new_vector.append(1/(1+np.e**(-1*input_vector[i])))
     return new_vector
 
