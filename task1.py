@@ -24,6 +24,13 @@ def load_csv(filename):
             data.append([float(val) for val in row]+ [1.0])
     return data
 
+#activator function
+def sigmoid(input_vector):
+    new_vector = []
+    for i in range(len(input_vector)):
+        new_vector.append(1/(1+np.e**(-1*input_vector[i])))
+    return new_vector
+
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
 class_1 = load_csv('Iris_TTT4275/class_1')
@@ -56,3 +63,4 @@ for i in range(len(training_data)):
     for j in range(len(training_data[i])):
         #perform matrix multiplication
         print(np.dot(W,training_data[i][j]))
+        print(sigmoid(np.dot(W,training_data[i][j])))
