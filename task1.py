@@ -47,9 +47,12 @@ print(class_1[0])
 
 D = len(class_1[0])-1
 C = len(training_data)
-
+#make the weights equal to 1
 W = np.ones((C, D+1))
-print(W)
 
-g = training_data[0][0] * W
-print(g)
+#iterate over every class
+for i in range(len(training_data)):
+    #iterate over every data point
+    for j in range(len(training_data[i])):
+        #perform matrix multiplication
+        print(np.dot(W,training_data[i][j]))
