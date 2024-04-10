@@ -77,22 +77,28 @@ target_vectors = {
 
 #step size, alpha
 alpha = 1
-print(W)
-#iterate over every class
-for i in range(len(training_data)):
-    #define the target vector, aka correct class
-    t = target_vectors.get(i, [0,0,0])
-    #iterate over every data point
-    for j in range(len(training_data[i])):
-        #perform matrix multiplication
-        x = training_data[i][j]
-        g = np.dot(W,x)
-        g = sigmoid(g)
-        MSE += MSE_function(g, t)
-        #remember to remove the last weight of x!
-        gradMSE += grad_MSE_function(g,t,x)
+steps = 100
 
-W = W-alpha*gradMSE
+print(W)
+
+# start training
+for s in range(steps):
+ 
+    #iterate over every class
+    for i in range(len(training_data)):
+        #define the target vector, aka correct class
+        t = target_vectors.get(i, [0,0,0])
+        #iterate over every data point
+        for j in range(len(training_data[i])):
+            #perform matrix multiplication
+            x = training_data[i][j]
+            g = np.dot(W,x)
+            g = sigmoid(g)
+            MSE += MSE_function(g, t)
+            gradMSE += grad_MSE_function(g,t,x)
+    alpha = alpha*0.9
+    W = W-alpha*gradMSE
+
 print("AAAA")
 print(W)
-print(gradMSE)
+#print(gradMSE)
