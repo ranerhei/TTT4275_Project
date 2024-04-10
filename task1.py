@@ -26,7 +26,9 @@ def load_csv(filename):
 
 #activator function, equation 20
 def sigmoid(input_vector):
-    return 1 / (1 + np.exp(-input_vector))
+    #This vvvv is unstable :(
+    #return 1 / (1 + np.exp(-input_vector))
+    return np.exp(input_vector) / (1 + np.exp(input_vector))
 
 #function to calculate Mean Square Error, equation 19
 def MSE_function(g, t):
