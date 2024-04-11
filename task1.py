@@ -17,6 +17,22 @@ def load_csv(filename):
             data.append([float(val) for val in row]+ [1.0])
     return data
 
+#activator function, equation 20
+def sigmoid(input_vector):
+    #This vvvv is unstable :(
+    #return 1 / (1 + np.exp(-input_vector))
+    return np.exp(input_vector) / (1 + np.exp(input_vector))
+
+#function to calculate Mean Square Error, equation 19
+def MSE_function(g, t):
+    return 0.5 * np.dot(np.transpose(g - t),g - t)
+
+#function to calculate gradient of MSE, equation 22
+def grad_MSE_function(g,t,x):
+    calculated_vector = np.multiply( np.multiply(g - t, g), 1-g)
+    calculated_vector = np.reshape(calculated_vector, (C,1))
+    return np.outer( calculated_vector, x)
+
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
 class_1 = load_csv('Iris_TTT4275/class_1')
@@ -36,13 +52,48 @@ class_3_testing = class_3[30:]
 #make a total training data set
 training_data = [class_1_training, class_2_training, class_3_training]
 
-print(class_1[0])
 
 D = len(class_1[0])-1
 C = len(training_data)
-
+#make the weights equal to 1
 W = np.ones((C, D+1))
+# store total Mean Square Error
+MSE = 0
+gradMSE = 0
+
+# set of target vectors
+target_vectors = {
+     0: [1,0,0],
+     1: [0,1,0],
+     2: [0,0,1]
+}
+
+#step size, alpha
+alpha = 1
+steps = 100
+
 print(W)
 
 g = training_data[0][0] * W
 print(g)
+# start training
+for s in range(steps):
+ 
+    #iterate over every class
+    for i in range(len(training_data)):
+        #define the target vector, aka correct class
+        t = target_vectors.get(i, [0,0,0])
+        #iterate over every data point
+        for j in range(len(training_data[i])):
+            #perform matrix multiplication
+            x = training_data[i][j]
+            g = np.dot(W,x)
+            g = sigmoid(g)
+            MSE += MSE_function(g, t)
+            gradMSE += grad_MSE_function(g,t,x)
+    alpha = alpha*0.9
+    W = W-alpha*gradMSE
+
+print("AAAA")
+print(W)
+#print(gradMSE)

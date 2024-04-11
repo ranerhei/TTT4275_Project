@@ -1,0 +1,67 @@
+import csv
+import matplotlib.pyplot as plt
+import numpy as np
+
+from functions import load_csv
+
+
+def plot_histogram(data):
+    # Get the number of dimensions
+    num_dimensions = len(data[0][0])
+    # Create subplots for each dimension
+    fig, axs = plt.subplots(num_dimensions, 1, figsize=(10, 8), sharex=True)
+    # Plot histograms for each dimension of each class
+    for dim in range(num_dimensions):
+        axs[dim].hist([data[0][i][dim] for i in range(len(class_1))], alpha=0.5, label='Class 1', color='red')
+        axs[dim].hist([data[1][i][dim] for i in range(len(class_2))], alpha=0.5, label='Class 2', color='green')
+        axs[dim].hist([data[2][i][dim] for i in range(len(class_3))], alpha=0.5, label='Class 3', color='blue')
+        axs[dim].set_title(f'Histogram for Dimension {dim+1}')
+        axs[dim].set_ylabel('Amount')
+    # Add common x-axis label
+    axs[num_dimensions - 1].set_xlabel('Value')
+    # Add legend
+    axs[0].legend()
+    # Adjust layout
+    plt.tight_layout()
+    # Show the plot
+    plt.show()
+
+def plot_dimensions_XY(data):
+    # Get data points for each class
+    class_1_x = [point[0] for point in class_1]
+    class_1_y = [point[1] for point in class_1]
+    class_2_x = [point[0] for point in class_2]
+    class_2_y = [point[1] for point in class_2]
+    class_3_x = [point[0] for point in class_3]
+    class_3_y = [point[1] for point in class_3]
+
+
+    # Create the scatter plot
+    plt.figure(figsize=(8, 6))
+    plt.scatter(class_1_x, class_1_y, color='red', label='Class 1')
+    plt.scatter(class_2_x, class_2_y, color='blue', label='Class 2')
+    plt.scatter(class_3_x, class_3_y, color='green', label='Class 3')
+
+    # Set labels and title
+    plt.xlabel('Dimension 0')
+    plt.ylabel('Dimension 1')
+    plt.title('Scatter Plot of Dimension 0 vs Dimension 1')
+
+    # Add legend
+    plt.legend()
+
+    # Show the plot
+    plt.grid(True)
+    plt.show()
+
+
+#load data
+#data has [sepal_length, sepal_width. petal_length, petal_width]
+class_1 = load_csv('Iris_TTT4275/class_1', False)
+class_2 = load_csv('Iris_TTT4275/class_2', False)
+class_3 = load_csv('Iris_TTT4275/class_3', False)
+
+data = [class_1,class_2,class_3]
+
+#plot_histogram(data)
+plot_dimensions_XY(data)
