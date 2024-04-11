@@ -26,6 +26,34 @@ def plot_histogram(data):
     # Show the plot
     plt.show()
 
+def plot_dimensions_XY(data):
+    # Get data points for each class
+    class_1_x = [point[0] for point in class_1]
+    class_1_y = [point[1] for point in class_1]
+    class_2_x = [point[0] for point in class_2]
+    class_2_y = [point[1] for point in class_2]
+    class_3_x = [point[0] for point in class_3]
+    class_3_y = [point[1] for point in class_3]
+
+
+    # Create the scatter plot
+    plt.figure(figsize=(8, 6))
+    plt.scatter(class_1_x, class_1_y, color='red', label='Class 1')
+    plt.scatter(class_2_x, class_2_y, color='blue', label='Class 2')
+    plt.scatter(class_3_x, class_3_y, color='green', label='Class 3')
+
+    # Set labels and title
+    plt.xlabel('Dimension 0')
+    plt.ylabel('Dimension 1')
+    plt.title('Scatter Plot of Dimension 0 vs Dimension 1')
+
+    # Add legend
+    plt.legend()
+
+    # Show the plot
+    plt.grid(True)
+    plt.show()
+
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
@@ -36,3 +64,4 @@ class_3 = load_csv('Iris_TTT4275/class_3', False)
 data = [class_1,class_2,class_3]
 
 #plot_histogram(data)
+plot_dimensions_XY(data)
