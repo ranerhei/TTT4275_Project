@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import csv
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 #data importer
@@ -39,6 +39,26 @@ class_1 = load_csv('Iris_TTT4275/class_1')
 class_2 = load_csv('Iris_TTT4275/class_2')
 class_3 = load_csv('Iris_TTT4275/class_3')
 
+#split each class into vectors containing sepal and petal heights
+#and widths
+def sepal_petal_seperator(class_x):
+    sepal = []
+    petal = []
+    for vec in class_x:
+        sepal.append(vec[:2])
+        petal.append(vec[2:4])
+    #print("sepal", sepal)
+    #print("petal", petal)
+    return sepal, petal
+
+def plot_scatter(vector, label, color):
+    x =  [point[0] for point in vector]
+
+    y = [point[1] for point in vector]
+    
+    plt.scatter(x, y, label = label, color = color)
+
+
 #make training and testing set
 class_1_training = class_1[:30]
 class_1_testing = class_1[30:]
@@ -72,10 +92,10 @@ target_vectors = {
 alpha = 1
 steps = 100
 
-print(W)
+#print(W)
 
 g = training_data[0][0] * W
-print(g)
+#print(g)
 # start training
 for s in range(steps):
  
@@ -94,6 +114,38 @@ for s in range(steps):
     alpha = alpha*0.9
     W = W-alpha*gradMSE
 
-print("AAAA")
-print(W)
+#print("AAAA")
+#print(W)
+
+#Creates points of lengths and widths of sepal and petal of
+#each class:
+sepal_1, petal_1 = sepal_petal_seperator(class_1)
+sepal_2, petal_2 = sepal_petal_seperator(class_2)
+sepal_3, petal_3 = sepal_petal_seperator(class_3)
+#Sepal plotting procedure:
+"""
+plot_scatter(sepal_1, "Class 1", "red")
+plot_scatter(sepal_2, "Class 2", "blue")
+plot_scatter(sepal_3, "Class 3", "green")
+    
+plt.xlabel("lengths")
+plt.ylabel("widths")
+plt.legend()
+plt.title("Sepal lengths and width")
+plt.grid(True)
+plt.show()
+"""
+#Petal plotting procedure:
+plot_scatter(petal_1, "Class 1", "red")
+plot_scatter(petal_2, "Class 2", "blue")
+plot_scatter(petal_3, "Class 3", "green")
+    
+plt.xlabel("lengths")
+plt.ylabel("widths")
+plt.legend()
+plt.title("Petal lengths and width")
+plt.grid(True)
+plt.show()
+
+
 #print(gradMSE)
