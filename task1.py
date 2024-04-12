@@ -23,6 +23,12 @@ from functions import MSE_function
 #function to calculate gradient of MSE, equation 22
 from functions import grad_MSE_function
 
+from functions import get_class_from_vector
+
+from functions import round_calculated_vector
+
+from plot import plot_W_changes
+
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
 class_1 = load_csv('Iris_TTT4275/class_1')
@@ -41,6 +47,8 @@ class_3_testing = class_3[30:]
 
 #make a total training data set
 training_data = [class_1_training, class_2_training, class_3_training]
+#make a total test data set
+testing_data = [class_1_testing, class_2_testing, class_3_testing]
 
 # D is the amount of dimensions
 D = len(class_1[0])-1
@@ -48,61 +56,71 @@ D = len(class_1[0])-1
 C = len(training_data)
 
 #make the weights equal to 1
-W = np.ones((C, D+1))
-# store total Mean Square Error
-MSE = 0
-gradMSE = 0
+W = np.zeros((C, D+1))
+#stored W matrixes
+W_history = [W]
+
+# store Mean Square Error
+MSE_history = []
+gradMSE_history = []
 
 # set of target vectors
-target_vectors = {
+class_to_vector = {
      0: [1,0,0],
      1: [0,1,0],
      2: [0,0,1]
 }
 
 #step size, alpha
-alpha = 1
-steps = 100
+# klarte 1 feil med alpha = 0.01
+alpha = 0.005
+steps = 2000
 
+print('W before training:')
 print(W)
 
-#stored W matrixes
-W_history = []
 
 # start training
 for s in range(steps):
+    gradMSE = 0
+    total_MSE = 0
     #iterate over every class
     for i in range(len(training_data)):
         #define the target vector, aka correct class
-        t = target_vectors.get(i, [0,0,0])
+        t = class_to_vector.get(i, [0,0,0])
         #iterate over every data point
         for j in range(len(training_data[i])):
             #perform matrix multiplication
             x = training_data[i][j]
             g = np.dot(W,x)
             g = sigmoid(g)
-            MSE += MSE_function(g, t)
+            total_MSE += MSE_function(g, t)
             gradMSE += grad_MSE_function(g,t,x,C)
     # update the W matrix
     W = W-alpha*gradMSE
+    W_history.append(W)
+    #print(total_MSE)
     # update the step size, alpha
-    alpha = alpha*0.9
-    # Append the current value of W to W_history
-    W_history.append(W.copy())
+    #alpha = alpha*0.9
 
-print("AAAA")
+print('W after training:')
 print(W)
-#print(gradMSE)
 
-# Convert W_history to a numpy array for easier manipulation
-W_history = np.array(W_history)
-    
-plt.figure(figsize=(10, 6))
-for dim in range(W_history.shape[1]):
-    plt.plot(W_history[:, dim], label=f'Dimension {dim}')
-plt.xlabel('Iteration')
-plt.ylabel('Value of W')
-plt.title('Change in W over iterations')
-plt.legend()
-plt.grid(True)
-plt.show()
+errors = 0
+# start testing:
+# i, iterate over every class
+for i in range(len(testing_data)):
+    t = class_to_vector.get(i, [0,0,0])
+    # j, iterate over every datapoint
+    for j in range(len(testing_data[i])):
+        #perform matrix multiplication
+        x = training_data[i][j]
+        g = np.dot(W,x)
+        g = sigmoid(g)
+        rounded_g = round_calculated_vector(g)
+        if (rounded_g != t): errors+=1
+        
+print(errors)
+
+        
+plot_W_changes(W_history)
