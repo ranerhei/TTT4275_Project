@@ -4,6 +4,13 @@ import numpy as np
 
 from functions import load_csv
 
+#vector for dimensions
+name_vector = {
+     0: 'sepal length',
+     1: 'sepal width',
+     2: 'petal length',
+     3: 'petal width'
+}
 
 def plot_histogram(data):
     # Get the number of dimensions
@@ -47,13 +54,6 @@ def plot_dimensions_XY(data, name_vector):
     plt.tight_layout()
     plt.show()
 
-#vector for dimensions
-name_vector = {
-     0: 'sepal length',
-     1: 'sepal width',
-     2: 'petal length',
-     3: 'petal width'
-}
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
