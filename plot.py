@@ -1,0 +1,67 @@
+import csv
+import matplotlib.pyplot as plt
+import numpy as np
+
+from functions import load_csv
+
+#vector for dimensions
+name_vector = {
+     0: 'sepal length',
+     1: 'sepal width',
+     2: 'petal length',
+     3: 'petal width'
+}
+
+def plot_histogram(data):
+    # Get the number of dimensions
+    num_dimensions = len(data[0][0])
+    # Create subplots for each dimension
+    fig, axs = plt.subplots(num_dimensions, 1, figsize=(10, 8), sharex=True)
+    # Plot histograms for each dimension of each class
+    for dim in range(num_dimensions):
+        axs[dim].hist([data[0][i][dim] for i in range(len(class_1))], alpha=0.5, label='Class 1', color='red')
+        axs[dim].hist([data[1][i][dim] for i in range(len(class_2))], alpha=0.5, label='Class 2', color='green')
+        axs[dim].hist([data[2][i][dim] for i in range(len(class_3))], alpha=0.5, label='Class 3', color='blue')
+        axs[dim].set_title(f'Histogram for Dimension {dim+1}')
+        axs[dim].set_ylabel('Amount')
+    # Add common x-axis label
+    axs[num_dimensions - 1].set_xlabel('Value')
+    # Add legend
+    axs[0].legend()
+    # Adjust layout
+    plt.tight_layout()
+    # Show the plot
+    plt.show()
+
+def plot_dimensions_XY(data, name_vector):
+    # make figure        
+    fig, axs = plt.subplots(4, 4, figsize=(12, 12))
+    # need to iterate over the dimensions
+    for i in range(len(data[0][0])):
+        for j in range(len(data[0][0])):
+            # if the dimensions are different
+            if (j != i):
+                axs[j, i].scatter([point[i] for point in data[0]], [point[j] for point in data[0]], color='red', label='Class 1')
+                axs[j, i].scatter([point[i] for point in data[1]], [point[j] for point in data[1]], color='green', label='Class 2')
+                axs[j, i].scatter([point[i] for point in data[2]], [point[j] for point in data[2]], color='blue', label='Class 3')
+                axs[j,i].set_xlabel(name_vector.get(i))
+                axs[j,i].set_ylabel(name_vector.get(j))
+                axs[j,i].legend()
+            # if the dimensions are equal, use the box to display text
+            else:
+                axs[j, i].text(0.5, 0.5, f'<<={name_vector.get(i)} =>>', horizontalalignment='center', verticalalignment='center', fontsize=12)
+
+    plt.tight_layout()
+    plt.show()
+
+
+#load data
+#data has [sepal_length, sepal_width. petal_length, petal_width]
+class_1 = load_csv('Iris_TTT4275/class_1', False)
+class_2 = load_csv('Iris_TTT4275/class_2', False)
+class_3 = load_csv('Iris_TTT4275/class_3', False)
+
+data = [class_1,class_2,class_3]
+
+#plot_histogram(data)
+plot_dimensions_XY(data, name_vector)
