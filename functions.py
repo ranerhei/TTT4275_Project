@@ -27,7 +27,7 @@ def MSE_function(calculated_vector, target_vector):
     return 0.5 * np.dot(np.transpose(calculated_vector - target_vector),calculated_vector - target_vector)
 
 #function to calculate gradient of MSE, equation 22
-def grad_MSE_function(g,t,x):
+def grad_MSE_function(g,t,x,C):
     calculated_vector = np.multiply( np.multiply(g - t, g), 1-g)
     calculated_vector = np.reshape(calculated_vector, (C,1))
     return np.outer( calculated_vector, x)

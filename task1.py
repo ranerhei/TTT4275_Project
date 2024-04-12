@@ -12,33 +12,16 @@ import matplotlib as plt
 import numpy as np
 
 #data importer
-def load_csv(filename):
-    #make data array
-    data = []
-    #open file
-    with open(filename, 'r') as file:
-        csv_reader = csv.reader(file)
-        #iterate through data and append
-        for row in csv_reader:
-            #add a weight at the end of each sample
-            data.append([float(val) for val in row]+ [1.0])
-    return data
+from functions import load_csv
 
 #activator function, equation 20
-def sigmoid(input_vector):
-    #This vvvv is unstable :(
-    #return 1 / (1 + np.exp(-input_vector))
-    return np.exp(input_vector) / (1 + np.exp(input_vector))
+from functions import sigmoid
 
 #function to calculate Mean Square Error, equation 19
-def MSE_function(g, t):
-    return 0.5 * np.dot(np.transpose(g - t),g - t)
+from functions import MSE_function
 
 #function to calculate gradient of MSE, equation 22
-def grad_MSE_function(g,t,x):
-    calculated_vector = np.multiply( np.multiply(g - t, g), 1-g)
-    calculated_vector = np.reshape(calculated_vector, (C,1))
-    return np.outer( calculated_vector, x)
+from functions import grad_MSE_function
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
@@ -59,9 +42,11 @@ class_3_testing = class_3[30:]
 #make a total training data set
 training_data = [class_1_training, class_2_training, class_3_training]
 
-
+# D is the amount of dimensions
 D = len(class_1[0])-1
+# C is the amount of classes
 C = len(training_data)
+
 #make the weights equal to 1
 W = np.ones((C, D+1))
 # store total Mean Square Error
@@ -83,7 +68,6 @@ print(W)
 
 # start training
 for s in range(steps):
- 
     #iterate over every class
     for i in range(len(training_data)):
         #define the target vector, aka correct class
@@ -95,7 +79,7 @@ for s in range(steps):
             g = np.dot(W,x)
             g = sigmoid(g)
             MSE += MSE_function(g, t)
-            gradMSE += grad_MSE_function(g,t,x)
+            gradMSE += grad_MSE_function(g,t,x,C)
     alpha = alpha*0.9
     W = W-alpha*gradMSE
 
