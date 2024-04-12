@@ -54,6 +54,81 @@ def plot_dimensions_XY(data, name_vector):
     plt.tight_layout()
     plt.show()
 
+def plot_W_changes(W_vector, option=1):
+    class_labels = ['Class 1', 'Class 2', 'Class 3']
+    dimension_labels = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width', 'Constant']
+
+    if option==1:
+        num_subplots = len(class_labels)
+    elif option==2:
+        num_subplots = len(dimension_labels)
+    elif option==3:
+        num_subplots = 1
+    #create subplots
+    #fig, axs = plt.subplots(num_subplots, 1, figsize=(10,8))
+    
+    # make vectors
+    class_1_sepal_length = []
+    class_1_sepal_width = []
+    class_1_petal_length = []
+    class_1_petal_width = []
+    class_1_constant = []
+
+    class_2_sepal_length = []
+    class_2_sepal_width = []
+    class_2_petal_length = []
+    class_2_petal_width = []
+    class_2_constant = []
+
+    class_3_sepal_length = []
+    class_3_sepal_width = []
+    class_3_petal_length = []
+    class_3_petal_width = []
+    class_3_constant = []
+
+    # iterate over all Ws
+    for i in range(len(W_vector)):
+        class_1_sepal_length.append(W_vector[i][0][0])
+        class_1_sepal_width.append(W_vector[i][0][1])
+        class_1_petal_length.append(W_vector[i][0][2])
+        class_1_petal_width.append(W_vector[i][0][3])
+        class_1_constant.append(W_vector[i][0][4])
+
+        class_2_sepal_length.append(W_vector[i][1][0])
+        class_2_sepal_width.append(W_vector[i][1][1])
+        class_2_petal_length.append(W_vector[i][1][2])
+        class_2_petal_width.append(W_vector[i][1][3])
+        class_2_constant.append(W_vector[i][1][4])
+
+        class_3_sepal_length.append(W_vector[i][2][0])
+        class_3_sepal_width.append(W_vector[i][2][1])
+        class_3_petal_length.append(W_vector[i][2][2])
+        class_3_petal_width.append(W_vector[i][2][3])
+        class_3_constant.append(W_vector[i][2][4])
+
+    plt.plot(class_1_sepal_length, label='class 1 sepal length')
+    plt.plot(class_1_sepal_width, label='class 1 sepal width')
+    plt.plot(class_1_petal_length, label='class 1 petal length')
+    plt.plot(class_1_petal_width, label='class 1 petal width')
+    plt.plot(class_1_constant, label='class 1 constant')
+
+    plt.plot(class_2_sepal_length, label='class 2 sepal length')
+    plt.plot(class_2_sepal_width, label='class 2 sepal width')
+    plt.plot(class_2_petal_length, label='class 2 petal length')
+    plt.plot(class_2_petal_width, label='class 2 petal width')
+    plt.plot(class_2_constant, label='class 2 constant')
+
+    plt.plot(class_3_sepal_length, label='class 3 sepal length')
+    plt.plot(class_3_sepal_width, label='class 3 sepal width')
+    plt.plot(class_3_petal_length, label='class 3 petal length')
+    plt.plot(class_3_petal_width, label='class 3 petal width')
+    plt.plot(class_3_constant, label='class 3 constant')
+
+    plt.xlabel('Iteration')
+    plt.ylabel('Weighting')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
@@ -64,4 +139,4 @@ class_3 = load_csv('Iris_TTT4275/class_3', False)
 data = [class_1,class_2,class_3]
 
 #plot_histogram(data)
-plot_dimensions_XY(data, name_vector)
+#plot_dimensions_XY(data, name_vector)
