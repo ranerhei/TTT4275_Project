@@ -8,7 +8,7 @@ test sets,      M=20
 """
 
 import csv
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 #data importer
@@ -66,6 +66,9 @@ steps = 100
 
 print(W)
 
+#stored W matrixes
+W_history = []
+
 # start training
 for s in range(steps):
     #iterate over every class
@@ -80,9 +83,26 @@ for s in range(steps):
             g = sigmoid(g)
             MSE += MSE_function(g, t)
             gradMSE += grad_MSE_function(g,t,x,C)
-    alpha = alpha*0.9
+    # update the W matrix
     W = W-alpha*gradMSE
+    # update the step size, alpha
+    alpha = alpha*0.9
+    # Append the current value of W to W_history
+    W_history.append(W.copy())
 
 print("AAAA")
 print(W)
 #print(gradMSE)
+
+# Convert W_history to a numpy array for easier manipulation
+W_history = np.array(W_history)
+    
+plt.figure(figsize=(10, 6))
+for dim in range(W_history.shape[1]):
+    plt.plot(W_history[:, dim], label=f'Dimension {dim}')
+plt.xlabel('Iteration')
+plt.ylabel('Value of W')
+plt.title('Change in W over iterations')
+plt.legend()
+plt.grid(True)
+plt.show()
