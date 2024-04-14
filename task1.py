@@ -89,7 +89,7 @@ target_vectors = {
 }
 
 #step size, alpha
-alpha = 1
+alpha = 0.1
 steps = 100
 
 #print(W)
@@ -111,11 +111,12 @@ for s in range(steps):
             g = sigmoid(g)
             MSE += MSE_function(g, t)
             gradMSE += grad_MSE_function(g,t,x)
+            print(gradMSE)
     alpha = alpha*0.9
     W = W-alpha*gradMSE
 
-#print("AAAA")
-#print(W)
+print("AAAA")
+print(W)
 
 #Creates points of lengths and widths of sepal and petal of
 #each class:
@@ -135,6 +136,7 @@ plt.title("Sepal lengths and width")
 plt.grid(True)
 plt.show()
 """
+"""
 #Petal plotting procedure:
 plot_scatter(petal_1, "Class 1", "red")
 plot_scatter(petal_2, "Class 2", "blue")
@@ -146,6 +148,4 @@ plt.legend()
 plt.title("Petal lengths and width")
 plt.grid(True)
 plt.show()
-
-
-#print(gradMSE)
+"""
