@@ -5,33 +5,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #data importer
-def load_csv(filename):
-    #make data array
-    data = []
-    #open file
-    with open(filename, 'r') as file:
-        csv_reader = csv.reader(file)
-        #iterate through data and append
-        for row in csv_reader:
-            #add a weight at the end of each sample
-            data.append([float(val) for val in row]+ [1.0])
-    return data
+from functions import load_csv
 
 #activator function, equation 20
-def sigmoid(input_vector):
-    #This vvvv is unstable :(
-    #return 1 / (1 + np.exp(-input_vector))
-    return np.exp(input_vector) / (1 + np.exp(input_vector))
+from functions import sigmoid
 
 #function to calculate Mean Square Error, equation 19
-def MSE_function(g, t):
-    return 0.5 * np.dot(np.transpose(g - t),g - t)
+from functions import MSE_function
 
 #function to calculate gradient of MSE, equation 22
-def grad_MSE_function(g,t,x):
-    calculated_vector = np.multiply( np.multiply(g - t, g), 1-g)
-    calculated_vector = np.reshape(calculated_vector, (C,1))
-    return np.outer( calculated_vector, x)
+from functions import grad_MSE_function
+
+from functions import get_class_from_vector
+
+from functions import round_calculated_vector
+
+from plot import plot_W_changes
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
@@ -71,18 +60,25 @@ class_3_testing = class_3[30:]
 
 #make a total training data set
 training_data = [class_1_training, class_2_training, class_3_training]
+#make a total test data set
+testing_data = [class_1_testing, class_2_testing, class_3_testing]
 
-
+# D is the amount of dimensions
 D = len(class_1[0])-1
+# C is the amount of classes
 C = len(training_data)
+
 #make the weights equal to 1
-W = np.ones((C, D+1))
-# store total Mean Square Error
-MSE = 0
-gradMSE = 0
+W = np.zeros((C, D+1))
+#stored W matrixes
+W_history = [W]
+
+# store Mean Square Error
+MSE_history = []
+gradMSE_history = []
 
 # set of target vectors
-target_vectors = {
+class_to_vector = {
      0: [1,0,0],
      1: [0,1,0],
      2: [0,0,1]
@@ -96,13 +92,21 @@ steps = 100
 
 g = training_data[0][0] * W
 #print(g)
+# klarte 1 feil med alpha = 0.01
+alpha = 0.005
+steps = 2000
+
+print('W before training:')
+print(W)
+
 # start training
 for s in range(steps):
- 
+    gradMSE = 0
+    total_MSE = 0
     #iterate over every class
     for i in range(len(training_data)):
         #define the target vector, aka correct class
-        t = target_vectors.get(i, [0,0,0])
+        t = class_to_vector.get(i, [0,0,0])
         #iterate over every data point
         for j in range(len(training_data[i])):
             #perform matrix multiplication
@@ -113,9 +117,16 @@ for s in range(steps):
             gradMSE += grad_MSE_function(g,t,x)
             print(gradMSE)
     alpha = alpha*0.9
+            total_MSE += MSE_function(g, t)
+            gradMSE += grad_MSE_function(g,t,x,C)
+    # update the W matrix
     W = W-alpha*gradMSE
+    W_history.append(W)
+    #print(total_MSE)
+    # update the step size, alpha
+    #alpha = alpha*0.9
 
-print("AAAA")
+print('W after training:')
 print(W)
 
 #Creates points of lengths and widths of sepal and petal of
@@ -149,3 +160,21 @@ plt.title("Petal lengths and width")
 plt.grid(True)
 plt.show()
 """
+errors = 0
+# start testing:
+# i, iterate over every class
+for i in range(len(testing_data)):
+    t = class_to_vector.get(i, [0,0,0])
+    # j, iterate over every datapoint
+    for j in range(len(testing_data[i])):
+        #perform matrix multiplication
+        x = training_data[i][j]
+        g = np.dot(W,x)
+        g = sigmoid(g)
+        rounded_g = round_calculated_vector(g)
+        if (rounded_g != t): errors+=1
+        
+print(errors)
+
+        
+plot_W_changes(W_history)
