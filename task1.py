@@ -72,9 +72,8 @@ class_to_vector = {
 }
 
 #step size, alpha
-# klarte 1 feil med alpha = 0.01
 alpha = 0.005
-steps = 2000
+steps = 4000
 
 print('W before training:')
 print(W)
@@ -106,7 +105,7 @@ for s in range(steps):
 print('W after training:')
 print(W)
 
-errors = 0
+confusion_matrix = np.zeros((3,3))
 # start testing:
 # i, iterate over every class
 for i in range(len(testing_data)):
@@ -114,13 +113,15 @@ for i in range(len(testing_data)):
     # j, iterate over every datapoint
     for j in range(len(testing_data[i])):
         #perform matrix multiplication
-        x = training_data[i][j]
+        x = testing_data[i][j]
         g = np.dot(W,x)
         g = sigmoid(g)
         rounded_g = round_calculated_vector(g)
-        if (rounded_g != t): errors+=1
+        if (rounded_g != t): 
+            output_class = rounded_g.index(i)
+            confusion_matrix[i][output_class] +=1
+        else:
+            confusion_matrix[i][i] +=1
         
-print(errors)
-
-        
-plot_W_changes(W_history)
+print(confusion_matrix)
+#plot_W_changes(W_history)
