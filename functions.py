@@ -2,7 +2,7 @@ import csv
 import matplotlib as plt
 import numpy as np
 
-#data importer
+#data importer and preprocessing
 def load_csv(filename, weight=True):
     #make data array
     data = []
@@ -11,7 +11,7 @@ def load_csv(filename, weight=True):
         csv_reader = csv.reader(file)
         #iterate through data and append
         for row in csv_reader:
-            #add a weight at the end of each sample
+            #add a weight at the end of each sample if specified
             if weight==False:
                 data.append([float(val) for val in row])
             else:
@@ -46,3 +46,41 @@ def get_class_from_vector(vector, target_vectors):
         if vector == target_vector:
             return class_num
     return None  # Return None if the vector doesn't match any target vector
+
+
+def confusion_matrix(vector, target_vectors, target_vector):
+    output_matrix = np.zeros(3,3)
+    #if correct
+    if vector==target_vector:
+        placement = get_class_from_vector(vector, target_vectors)
+        output_matrix[placement][placement] = 1
+        return output_matrix
+    #if false
+
+
+def train_W(training_data,
+            old_W, alpha,
+            class_to_vector = {
+                0: [1,0,0],
+                1: [0,1,0],
+                2: [0,0,1]
+            }
+            ):
+    # start training
+    gradMSE = 0
+    total_MSE = 0
+    #iterate over every class
+    for i in range(len(training_data)):
+        #define the target vector, aka correct class
+        t = class_to_vector.get(i, [0,0,0])
+        #iterate over every data point
+        for j in range(len(training_data[i])):
+            #perform matrix multiplication
+            x = training_data[i][j]
+            g = np.dot(W,x)
+            g = sigmoid(g)
+            total_MSE += MSE_function(g, t)
+            gradMSE += grad_MSE_function(g,t,x,C)
+    # update the W matrix
+    new_W = old_W-alpha*gradMSE
+    return new_W

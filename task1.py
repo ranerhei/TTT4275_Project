@@ -28,12 +28,16 @@ from functions import get_class_from_vector
 from functions import round_calculated_vector
 
 from plot import plot_W_changes
+from plot import plot_spider_web
+from plot import paralell_plot
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
 class_1 = load_csv('Iris_TTT4275/class_1')
 class_2 = load_csv('Iris_TTT4275/class_2')
 class_3 = load_csv('Iris_TTT4275/class_3')
+
+complete_data = [class_1, class_2, class_3]
 
 #make training and testing set
 class_1_training = class_1[:30]
@@ -73,7 +77,7 @@ class_to_vector = {
 
 #step size, alpha
 alpha = 0.005
-steps = 4000
+steps = 2000
 
 print('W before training:')
 print(W)
@@ -98,9 +102,6 @@ for s in range(steps):
     # update the W matrix
     W = W-alpha*gradMSE
     W_history.append(W)
-    #print(total_MSE)
-    # update the step size, alpha
-    #alpha = alpha*0.9
 
 print('W after training:')
 print(W)
@@ -124,4 +125,6 @@ for i in range(len(testing_data)):
             confusion_matrix[i][i] +=1
         
 print(confusion_matrix)
+plot_spider_web(W)
 #plot_W_changes(W_history)
+#paralell_plot(complete_data)

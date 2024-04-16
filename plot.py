@@ -4,6 +4,8 @@ import numpy as np
 
 from functions import load_csv
 
+
+
 #vector for dimensions
 name_vector = {
      0: 'sepal length',
@@ -15,6 +17,8 @@ name_vector = {
 def plot_histogram(data):
     # Get the number of dimensions
     num_dimensions = len(data[0][0])
+
+    dimension_labels = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width']
     # Create subplots for each dimension
     fig, axs = plt.subplots(num_dimensions, 1, figsize=(10, 8), sharex=True)
     # Plot histograms for each dimension of each class
@@ -22,7 +26,7 @@ def plot_histogram(data):
         axs[dim].hist([data[0][i][dim] for i in range(len(class_1))], alpha=0.5, label='Class 1', color='red')
         axs[dim].hist([data[1][i][dim] for i in range(len(class_2))], alpha=0.5, label='Class 2', color='green')
         axs[dim].hist([data[2][i][dim] for i in range(len(class_3))], alpha=0.5, label='Class 3', color='blue')
-        axs[dim].set_title(f'Histogram for Dimension {dim+1}')
+        axs[dim].set_title(f'{dimension_labels[dim]}')
         axs[dim].set_ylabel('Amount')
     # Add common x-axis label
     axs[num_dimensions - 1].set_xlabel('Value')
@@ -32,6 +36,30 @@ def plot_histogram(data):
     plt.tight_layout()
     # Show the plot
     plt.show()
+
+def plot_histogram2(data):
+    # Get the number of dimensions
+    num_dimensions = len(data[0][0])
+
+    dimension_labels = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width']
+    # Create subplots for each dimension
+    fig, axs = plt.subplots(num_dimensions, 1, figsize=(10, 8))
+    # Plot histograms for each dimension of each class
+    for dim in range(num_dimensions):
+        axs[dim].hist([data[0][i][dim] for i in range(len(class_1))], alpha=0.5, label='Class 1', color='red')
+        axs[dim].hist([data[1][i][dim] for i in range(len(class_2))], alpha=0.5, label='Class 2', color='green')
+        axs[dim].hist([data[2][i][dim] for i in range(len(class_3))], alpha=0.5, label='Class 3', color='blue')
+        axs[dim].set_title(f'{dimension_labels[dim]}')
+        axs[dim].set_ylabel('Amount')
+        # Add separate x-axis for each subplot
+        axs[dim].set_xlabel('Value')
+        # Add legend
+        axs[dim].legend()
+    # Adjust layout
+    plt.tight_layout()
+    # Show the plot
+    plt.show()
+
 
 def plot_dimensions_XY(data, name_vector):
     # make figure        
@@ -53,6 +81,56 @@ def plot_dimensions_XY(data, name_vector):
 
     plt.tight_layout()
     plt.show()
+
+def plot_spider_web(W):
+    num_dimensions = len(W[0])
+    num_classes = len(W)
+
+    angles = np.linspace(0, 2 * np.pi, num_dimensions, endpoint=False).tolist()
+    angles += angles[:1]  # Close the loop
+
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+
+    for i in range(num_classes):
+        values = W[i].tolist()
+        values += values[:1]  # Close the loop
+        ax.plot(angles, values, label=f'Class {i+1}')
+        ax.fill(angles, values, alpha=0.1)
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width', 'Constant'])
+    ax.set_title('Spider Web Plot of Weights')
+    ax.legend()
+
+    plt.show()
+
+def paralell_plot(data):
+    num_dimensions = len(data[0][0])
+    num_classes = len(data)
+    num_samples = len(data[0])
+
+    # Create a color map for different classes
+    colors = ['red', 'green', 'blue']
+
+
+
+    # Plot parallel coordinates
+    plt.figure(figsize=(10, 5))
+    for i in range(num_classes):
+        for j in range(num_samples-1):
+            data[i][j].pop()
+            plt.plot(range(num_dimensions-1), data[i][j], color=colors[i], alpha=0.5)
+        data[i][-1].pop()
+        plt.plot(range(num_dimensions-1), data[i][-1], color=colors[i], alpha=0.5, label=f'Class {i+1}')
+
+    plt.title('Parallel Coordinates Plot')
+    plt.xlabel('Features')
+    plt.ylabel('Feature Values')
+    plt.xticks(range(num_dimensions-1), ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width'])
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend(loc='upper right')
+    plt.show()
+
 
 def plot_W_changes(W_vector, option=1):
     class_labels = ['Class 1', 'Class 2', 'Class 3']
@@ -138,5 +216,5 @@ class_3 = load_csv('Iris_TTT4275/class_3', False)
 
 data = [class_1,class_2,class_3]
 
-#plot_histogram(data)
+plot_histogram2(data)
 #plot_dimensions_XY(data, name_vector)
