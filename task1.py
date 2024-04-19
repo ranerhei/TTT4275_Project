@@ -27,6 +27,9 @@ from functions import get_class_from_vector
 
 from functions import round_calculated_vector
 
+from functions import train_W
+from functions import test_W
+
 from plot import plot_W_changes
 from plot import plot_spider_web
 from plot import paralell_plot
@@ -82,49 +85,16 @@ steps = 2000
 print('W before training:')
 print(W)
 
-
 # start training
 for s in range(steps):
-    gradMSE = 0
-    total_MSE = 0
-    #iterate over every class
-    for i in range(len(training_data)):
-        #define the target vector, aka correct class
-        t = class_to_vector.get(i, [0,0,0])
-        #iterate over every data point
-        for j in range(len(training_data[i])):
-            #perform matrix multiplication
-            x = training_data[i][j]
-            g = np.dot(W,x)
-            g = sigmoid(g)
-            total_MSE += MSE_function(g, t)
-            gradMSE += grad_MSE_function(g,t,x,C)
-    # update the W matrix
-    W = W-alpha*gradMSE
+    W = train_W(W, training_data, alpha)
     W_history.append(W)
 
 print('W after training:')
 print(W)
 
-confusion_matrix = np.zeros((3,3))
-# start testing:
-# i, iterate over every class
-for i in range(len(testing_data)):
-    t = class_to_vector.get(i, [0,0,0])
-    # j, iterate over every datapoint
-    for j in range(len(testing_data[i])):
-        #perform matrix multiplication
-        x = testing_data[i][j]
-        g = np.dot(W,x)
-        g = sigmoid(g)
-        rounded_g = round_calculated_vector(g)
-        if (rounded_g != t): 
-            output_class = rounded_g.index(i)
-            confusion_matrix[i][output_class] +=1
-        else:
-            confusion_matrix[i][i] +=1
+confusion_matrix = test_W(W,testing_data)
+
         
 print(confusion_matrix)
 plot_spider_web(W)
-#plot_W_changes(W_history)
-#paralell_plot(complete_data)
