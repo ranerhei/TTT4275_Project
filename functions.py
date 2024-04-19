@@ -58,15 +58,16 @@ def confusion_matrix(vector, target_vectors, target_vector):
     #if false
 
 
-def train_W(training_data,
-            old_W, alpha,
+def train_W(old_W, 
+            training_data,
+            alpha,
             class_to_vector = {
                 0: [1,0,0],
                 1: [0,1,0],
                 2: [0,0,1]
             }
             ):
-    # start training
+    C = len(training_data)
     gradMSE = 0
     total_MSE = 0
     #iterate over every class
@@ -77,10 +78,38 @@ def train_W(training_data,
         for j in range(len(training_data[i])):
             #perform matrix multiplication
             x = training_data[i][j]
-            g = np.dot(W,x)
+            g = np.dot(old_W,x)
             g = sigmoid(g)
             total_MSE += MSE_function(g, t)
             gradMSE += grad_MSE_function(g,t,x,C)
     # update the W matrix
     new_W = old_W-alpha*gradMSE
     return new_W
+
+def test_W(W,
+           testing_data,
+           class_to_vector = {
+                0: [1,0,0],
+                1: [0,1,0],
+                2: [0,0,1]
+            }
+           ):
+    # make confusion matrix
+    confusion_matrix = np.zeros((3,3))
+    # start testing:
+    # i, iterate over every class
+    for i in range(len(testing_data)):
+        t = class_to_vector.get(i, [0,0,0])
+        # j, iterate over every datapoint
+        for j in range(len(testing_data[i])):
+            #perform matrix multiplication
+            x = testing_data[i][j]
+            g = np.dot(W,x)
+            g = sigmoid(g)
+            rounded_g = round_calculated_vector(g)
+            if (rounded_g != t): 
+                output_class = rounded_g.index(i)
+                confusion_matrix[i][output_class] +=1
+            else:
+                confusion_matrix[i][i] +=1
+    return confusion_matrix
