@@ -61,12 +61,10 @@ testing_data = [class_1_testing, class_2_testing, class_3_testing]
 D = len(class_1[0])-1
 # C is the amount of classes
 C = len(training_data)
-
 #make the weights equal to 1
 W = np.zeros((C, D+1))
 #stored W matrixes
 W_history = [W]
-
 # store Mean Square Error
 MSE_history = []
 gradMSE_history = []
@@ -79,7 +77,7 @@ class_to_vector = {
 }
 
 #step size, alpha
-alpha = 0.005
+alpha = 0.01
 steps = 2000
 
 print('W before training:')
@@ -93,8 +91,9 @@ for s in range(steps):
 print('W after training:')
 print(W)
 
-confusion_matrix = test_W(W,testing_data)
-
+confusion_matrix, errors = test_W(W,training_data)
         
 print(confusion_matrix)
-plot_spider_web(W)
+print(errors)
+#lot_spider_web(W)
+#plot_W_changes(W_history)

@@ -57,7 +57,7 @@ def confusion_matrix(vector, target_vectors, target_vector):
         return output_matrix
     #if false
 
-
+#Function to test W
 def train_W(old_W, 
             training_data,
             alpha,
@@ -86,6 +86,7 @@ def train_W(old_W,
     new_W = old_W-alpha*gradMSE
     return new_W
 
+#Funtion to train W
 def test_W(W,
            testing_data,
            class_to_vector = {
@@ -96,6 +97,8 @@ def test_W(W,
            ):
     # make confusion matrix
     confusion_matrix = np.zeros((3,3))
+    # make list to store the specific errors
+    errors = []
     # start testing:
     # i, iterate over every class
     for i in range(len(testing_data)):
@@ -107,9 +110,12 @@ def test_W(W,
             g = np.dot(W,x)
             g = sigmoid(g)
             rounded_g = round_calculated_vector(g)
+            #if wrong
             if (rounded_g != t): 
-                output_class = rounded_g.index(i)
+                output_class = rounded_g.index(1)
                 confusion_matrix[i][output_class] +=1
+                errors.append([i,j])
+            #if correct
             else:
                 confusion_matrix[i][i] +=1
-    return confusion_matrix
+    return confusion_matrix, errors

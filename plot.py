@@ -216,5 +216,5 @@ class_3 = load_csv('Iris_TTT4275/class_3', False)
 
 data = [class_1,class_2,class_3]
 
-plot_histogram2(data)
+#plot_histogram2(data)
 #plot_dimensions_XY(data, name_vector)
