@@ -84,16 +84,9 @@ class_to_vector = {
      2: [0,0,1]
 }
 
-#step size, alpha
-alpha = 0.1
-steps = 100
 
-#print(W)
-
-g = training_data[0][0] * W
-#print(g)
 # klarte 1 feil med alpha = 0.01
-alpha = 0.005
+alpha = 0.0062
 steps = 2000
 
 print('W before training:')
@@ -113,18 +106,11 @@ for s in range(steps):
             x = training_data[i][j]
             g = np.dot(W,x)
             g = sigmoid(g)
-            MSE += MSE_function(g, t)
-            gradMSE += grad_MSE_function(g,t,x)
-            print(gradMSE)
-    alpha = alpha*0.9
             total_MSE += MSE_function(g, t)
             gradMSE += grad_MSE_function(g,t,x,C)
     # update the W matrix
     W = W-alpha*gradMSE
     W_history.append(W)
-    #print(total_MSE)
-    # update the step size, alpha
-    #alpha = alpha*0.9
 
 print('W after training:')
 print(W)
@@ -161,20 +147,33 @@ plt.grid(True)
 plt.show()
 """
 errors = 0
+confusion_matrix = [[0,0,0],
+                    [0,0,0],
+                    [0,0,0]]
 # start testing:
 # i, iterate over every class
 for i in range(len(testing_data)):
     t = class_to_vector.get(i, [0,0,0])
     # j, iterate over every datapoint
-    for j in range(len(testing_data[i])):
+    for j in range(len(training_data[i])):
         #perform matrix multiplication
         x = training_data[i][j]
         g = np.dot(W,x)
         g = sigmoid(g)
         rounded_g = round_calculated_vector(g)
-        if (rounded_g != t): errors+=1
-        
+        print(rounded_g)
+
+        if rounded_g == t:
+            confusion_matrix[i][i] += 1
+        elif rounded_g != t:
+            output_class = rounded_g.index(1)
+            confusion_matrix[i][output_class] += 1
+
 print(errors)
+
+print(confusion_matrix[0])
+print(confusion_matrix[1])
+print(confusion_matrix[2])
 
         
 plot_W_changes(W_history)

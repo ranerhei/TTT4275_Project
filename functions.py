@@ -31,8 +31,6 @@ def grad_MSE_function(g,t,x,C):
     calculated_vector = np.multiply( np.multiply(g - t, g), 1-g)
     calculated_vector = np.reshape(calculated_vector, (C,1))
     return np.outer( calculated_vector, x)
-<<<<<<< HEAD
-=======
 
 # function to round a calculated vector, to describe a certain class
 def round_calculated_vector(vector):
@@ -48,4 +46,3 @@ def get_class_from_vector(vector, target_vectors):
         if vector == target_vector:
             return class_num
     return None  # Return None if the vector doesn't match any target vector
->>>>>>> 8f102c8244829f148aea0029d599af65fa0a30b7
