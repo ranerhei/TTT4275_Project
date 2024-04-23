@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 import numpy as np
-from functions_mnist import load_mnist_images, load_mnist_labels
-
+from functions_mnist import load_mnist_images, load_mnist_labels, plot_confusion_matrix
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 train_images = load_mnist_images('MNist_ttt4275/train_images.bin')
 train_labels = load_mnist_labels('MNist_ttt4275/train_labels.bin')
@@ -17,6 +18,7 @@ test_images_chunk = test_images[3000:4000]
 test_labels_chunk = test_labels[3000:4000]
 confusion_matrix = np.zeros((9,9))
 
+errors = 0
 for i in range(len(test_images_chunk)):
     #Contains all distances regarding image i
     distances = []
@@ -37,5 +39,10 @@ for i in range(len(test_images_chunk)):
         confusion_matrix[actual_image - 1][actual_image - 1] += 1
     else:
         confusion_matrix[actual_image - 1][classified_image - 1] += 1
+        errors += 1
+    error_rate = errros/len(test_images_chunk)
+
 
 print(confusion_matrix)
+print("error rate: ", errors/len(test_images_chunk))
+plot_confusion_matrix(confusion_matrix)
