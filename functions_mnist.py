@@ -13,6 +13,7 @@ def load_mnist_images(file_path):
         raw_data = f.read()
     # Convert the raw data into a numpy array of shape (num_images, num_rows, num_cols)
     images = np.frombuffer(raw_data, dtype=np.uint8).reshape(num_images, num_rows, num_cols)
+    images = images.reshape(num_images, -1)
     return images
 
 def load_mnist_labels(file_path):
@@ -30,6 +31,7 @@ train_images = load_mnist_images('MNist_ttt4275/train_images.bin')
 train_labels = load_mnist_labels('MNist_ttt4275/train_labels.bin')
 #test_images = load_mnist_images('t10k-images-idx3-ubyte')
 #test_labels = load_mnist_labels('t10k-labels-idx1-ubyte')
+print(train_images.shape)
 
 #first_image = train_images[0]
 #plt.imshow(first_image, cmap='gray')
