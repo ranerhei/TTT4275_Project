@@ -40,7 +40,7 @@ for i in range(len(test_images_chunk)):
     else:
         confusion_matrix[actual_image - 1][classified_image - 1] += 1
         errors += 1
-    error_rate = errros/len(test_images_chunk)
+    error_rate = errors/len(test_images_chunk)
 
 
 print(confusion_matrix)
