@@ -12,8 +12,10 @@ test_labels = load_mnist_labels('MNist_ttt4275/test_labels.bin')
 train_images = train_images/255
 test_images = test_images/255
 
-test_images_chunk = test_images[1000:1010]
-test_labels_chunk = test_labels[1000:1010]
+
+test_images_chunk = test_images[3000:4000]
+test_labels_chunk = test_labels[3000:4000]
+confusion_matrix = np.zeros((9,9))
 
 for i in range(len(test_images_chunk)):
     #Contains all distances regarding image i
@@ -25,8 +27,15 @@ for i in range(len(test_images_chunk)):
         difference = test_images_chunk[i] - train_images[j]
         dist = np.inner(difference, difference)
         distances.append(dist)
-        #print(dist)
+    #Finding the element which has the minimum distance, and corresponding image
     image_element = np.argmin(distances)
     classified_image = train_labels[image_element]
-    print("input image: " + str(actual_image))
-    print("classified: " + str(classified_image))
+    #print("input image: " + str(actual_image))
+    #print("classified: " + str(classified_image))
+    #Creating confusion matrix
+    if actual_image == classified_image:
+        confusion_matrix[actual_image - 1][actual_image - 1] += 1
+    else:
+        confusion_matrix[actual_image - 1][classified_image - 1] += 1
+
+print(confusion_matrix)
