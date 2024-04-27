@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-
+from scipy.spatial import distance
 
 def load_mnist_images(file_path):
     with open(file_path, 'rb') as f:
@@ -30,16 +30,52 @@ def load_mnist_labels(file_path):
     labels = np.frombuffer(raw_data, dtype=np.uint8)
     return labels
 
-#train_images = load_mnist_images('MNist_ttt4275/train_images.bin')
-#train_labels = load_mnist_labels('MNist_ttt4275/train_labels.bin')
-#test_images = load_mnist_images('t10k-images-idx3-ubyte')
-#test_labels = load_mnist_labels('t10k-labels-idx1-ubyte')
-#print(train_images.shape)
-
+train_images = load_mnist_images('MNist_ttt4275/train_images.bin')
+train_labels = load_mnist_labels('MNist_ttt4275/train_labels.bin')
+test_images = load_mnist_images('MNist_ttt4275/test_images.bin')
+test_labels = load_mnist_labels('MNist_ttt4275/test_labels.bin')
+print(train_images.shape)
+print(test_images.shape)
 #first_image = train_images[0]
 #plt.imshow(first_image, cmap='gray')
 #plt.axis('off')
-#plt.show()
+#plt.show(mages_to_plot = 5
+
+
+def plot_random_images():
+    num_images_to_plot = 5
+    random_indices = np.random.choice(len(train_images), num_images_to_plot, replace=False)
+
+    plt.figure(figsize=(10, 4))
+    for i, idx in enumerate(random_indices):
+        plt.subplot(1, num_images_to_plot, i + 1)
+        plt.imshow(train_images[idx].reshape(28, 28), cmap='gray')
+        #plt.title(f'Label: {train_labels[idx]}')
+        plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+def plot_missclassified(true, missclassified):
+    for i in range(3):
+        ditance = abs(true[i + 3] - missclassified[i + 3])
+        plt.subplot(3, 4, i*4+1)
+        plt.imshow(true[i + 3].reshape(28, 28), cmap='gray')
+        plt.title('True')
+        plt.axis('off')
+        
+        plt.subplot(3, 4, i*4+2)
+        plt.imshow(missclassified[i + 3].reshape(28, 28), cmap='gray')
+        plt.title('Misclassified')
+        plt.axis('off')
+
+        plt.subplot(3,4, i*4+3)
+        plt.title("Difference")
+        plt.imshow(ditance.reshape(28,28), cmap = 'gray')
+        plt.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+
 
 def plot_confusion_matrix(conf_matrix):
     plt.figure(figsize=(10, 8))
@@ -47,12 +83,12 @@ def plot_confusion_matrix(conf_matrix):
     sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False)
 
     # Customize tick labels
-    tick_labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    plt.xticks(np.arange(9) + 0.5, tick_labels, rotation=0)
-    plt.yticks(np.arange(9) + 0.5, tick_labels, rotation=0)
+    tick_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    plt.xticks(np.arange(10) + 0.5, tick_labels, rotation=0)
+    plt.yticks(np.arange(10) + 0.5, tick_labels, rotation=0)
 
-    plt.xlabel('Classified image')
-    plt.ylabel('True image')
+    plt.xlabel('Classified Image')
+    plt.ylabel('True Image')
     plt.title('Confusion Matrix')
     plt.show()
 
