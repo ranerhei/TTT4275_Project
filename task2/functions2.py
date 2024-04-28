@@ -99,7 +99,7 @@ def classifyKNN(test_images, test_labels, reference_images, reference_labels, K=
             dist = np.inner(difference, difference)
             distances.append(dist)
         # start vote, and find nearest neighbour in case of even vote
-        nearest_neighbour = None
+        nearest_neighbour = []
         votes = [0,0,0,0,0,0,0,0,0,0]
         for j in range(K):
             #the closest value
@@ -107,26 +107,33 @@ def classifyKNN(test_images, test_labels, reference_images, reference_labels, K=
             #remove this value
             distances = np.delete(distances, image_element)
             #save the first value
-            if j==0: nearest_neighbour = reference_labels[image_element]
+            nearest_neighbour.append(reference_labels[image_element])
             #increase votes
             votes[reference_labels[image_element]] += 1
         
-        print(f'Votes: {votes}')
-        # count occurances of the votes
-        class_counts = Counter(votes)
-        # find maximum count
-        max_votes = max(class_counts.values())
+        maximum_values = []
+        maximum_values.append(np.argmax(votes))
+        maximum_value = votes[np.argmax(votes)]
+        votes[np.argmax(votes)] = 0
+        while(maximum_value == votes[np.argmax(votes)]):
+            maximum_values.append(np.argmax(votes))
+            votes[np.argmax(votes)] = 0
         # try to classify image
         classified_image = None
         #if there are multiple max votes:
-        if list(class_counts.values()).count(max_votes) > 1:
-            classified_image = nearest_neighbour
-        #if there is a winned
+        if len(maximum_values) > 1:
+            found = False
+            for i in range(len(nearest_neighbour)):
+                for j in range(len(maximum_values)):
+                    if nearest_neighbour[i] == maximum_values[j]:
+                        classified_image = maximum_values[j]
+                        found = True
+                        break
+                if found: break
+        #if there is a winner
         else:
-            classified_image = np.argmax(votes)
-        print(f'Classified Image: {classified_image}')
-        print(f'Actual Image: {actual_image}')
-
+            classified_image = maximum_values[0]
+        #check if correct
         if actual_image == classified_image:
             confusion_matrix[actual_image][actual_image] += 1
         else:
