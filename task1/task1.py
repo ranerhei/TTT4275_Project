@@ -34,16 +34,19 @@ from plot import plot_W_changes
 from plot import plot_spider_web
 from plot import paralell_plot
 from plot import plot_MSE_history
+from plot import plot_MSE_histories
+from plot import plot_confusion_matrix
 
 #load data
 #data has [sepal_length, sepal_width. petal_length, petal_width]
-class_1 = load_csv('Iris_TTT4275/class_1')
-class_2 = load_csv('Iris_TTT4275/class_2')
-class_3 = load_csv('Iris_TTT4275/class_3')
+class_1 = load_csv('Iris_TTT4275/class_1', remove_sepal_width=True, remove_sepal_length=True, remove_petal_length=True)
+class_2 = load_csv('Iris_TTT4275/class_2', remove_sepal_width=True, remove_sepal_length=True, remove_petal_length=True)
+class_3 = load_csv('Iris_TTT4275/class_3', remove_sepal_width=True, remove_sepal_length=True, remove_petal_length=True)
+print(class_1[0])
 
 complete_data = [class_1, class_2, class_3]
 
-training_length = 30
+training_length = 49
 #make training and testing set
 class_1_training = class_1[:training_length]
 class_1_testing = class_1[training_length:]
@@ -82,22 +85,27 @@ class_to_vector = {
 alpha = 0.01
 steps = 2000
 
-print('W before training:')
-print(W)
+alphas = [0.1 , 0.05 , 0.01 , 0.005 , 0.001 , 0.0005 , 0.0001]
+MSE_histories = []
 
-# start training
+
+#for i in range(len(alphas)):  
+    #MSE_history = []
+    #W = np.zeros((C, D+1))   
+    # start training
 for s in range(steps):
     W, MSE_history = train_W(W, training_data, alpha, MSE_history)
     W_history.append(W)
+    #MSE_histories.append(MSE_history)
 
-print('W after training:')
+
 
 
 confusion_matrix, errors = test_W(W,training_data)
-        
-print(MSE_history[-1])
+plot_confusion_matrix(confusion_matrix)
+confusion_matrix, errors = test_W(W,testing_data)
+plot_confusion_matrix(confusion_matrix)
 #plot_MSE_history(MSE_history, alpha)
-#lot_spider_web(W)
-#plot_W_changes(W_history)
+#plot_MSE_histories(MSE_histories, alphas)
 
 

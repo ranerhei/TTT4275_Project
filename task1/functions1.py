@@ -3,19 +3,28 @@ import matplotlib as plt
 import numpy as np
 
 #data importer and preprocessing
-def load_csv(filename, weight=True):
+#data has [sepal_length, sepal_width. petal_length, petal_width]
+def load_csv(filename, weight=True, remove_sepal_width=False, remove_sepal_length=False, remove_petal_width=False, remove_petal_length=False):
     #make data array
     data = []
-    #open file
+    # Open file
     with open(filename, 'r') as file:
         csv_reader = csv.reader(file)
-        #iterate through data and append
+        # Iterate through data and append
         for row in csv_reader:
-            #add a weight at the end of each sample if specified
-            if weight==False:
-                data.append([float(val) for val in row])
-            else:
-                data.append([float(val) for val in row] + [1.0])
+            # Remove specified features from each row
+            if remove_petal_width:
+                del row[3]  # Remove petal width
+            if remove_petal_length:
+                del row[2]  # Remove petal length
+            if remove_sepal_width:
+                del row[1]  # Remove sepal width
+            if remove_sepal_length:
+                del row[0]  # Remove sepal length
+            # Add a weight at the end of each sample if specified
+            if weight:
+                row.append(1.0)
+            data.append([float(val) for val in row])
     return data
 
 #activator function, equation 20

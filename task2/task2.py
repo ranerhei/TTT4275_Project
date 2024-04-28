@@ -4,6 +4,9 @@ from functions2 import load_mnist_images
 from functions2 import load_mnist_labels
 from functions2 import plot_confusion_matrix
 from functions2 import plot_number
+from functions2 import create_sorted_matrix
+from functions2 import cluster
+from functions2 import classifyKNN
 
 #load training data
 train_images = load_mnist_images('task2/MNist_ttt4275/train_images.bin')
@@ -19,26 +22,27 @@ test_labels = load_mnist_labels('task2/MNist_ttt4275/test_labels.bin')
 train_images = train_images/255
 test_images = test_images/255
 
+# sort numbers
+sorted_matrix = create_sorted_matrix(train_labels, train_images)
+# create cluster matrix
+cluster_matrix = cluster(sorted_matrix)
+# reshape the cluster matrix
+cluster_vector = [cluster for row in cluster_matrix for cluster in row]
+# create labels for the cluster matrix
+cluster_labels = [label for i in range(10) for label in [i] * 64]
+
+
+
 #split data in a small chunk
-test_images_chunk = test_images[1000:1010]
-test_labels_chunk = test_labels[1000:1010]
+test_images_chunk = test_images[1000:1050]
+test_labels_chunk = test_labels[1000:1050]
 
-#make confusion matrix
-confusion_matrix = np.zeros((9,9))
+error_rate, confusion_matrix, wrong_images, wrong_labels, reference_images, reference_labels, differences = classifyKNN(test_images, test_labels, cluster_vector, cluster_labels, K=2)
 
-for i in range(len(test_images_chunk)):
-    #Contains all distances regarding image i
-    distances = []
-    actual_image = test_labels_chunk[i]
-    for j in range(len(train_images)):
-        #Computing the forumla for NN based classifier
-        difference = test_images_chunk[i] - train_images[j]
-        dist = np.inner(difference, difference)
-        distances.append(dist)
-        #print(dist)
-    image_element = np.argmin(distances)
-    classified_image = train_labels[image_element]
-    if actual_image == classified_image:
-        confusion_matrix[actual_image - 1][actual_image - 1] += 1
-    else:
-        confusion_matrix[actual_image - 1][classified_image - 1] += 1
+print(error_rate)
+#plot_number(wrong_images[0], wrong_labels[0])
+#plot_number(reference_images[0], reference_labels[0])
+#plot_number(differences[0])
+plot_number(cluster_vector[130])
+plot_number(cluster_vector[135])
+plot_number(cluster_vector[140])

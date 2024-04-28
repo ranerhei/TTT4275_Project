@@ -1,6 +1,7 @@
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 from functions1 import load_csv
 
@@ -86,6 +87,15 @@ def plot_MSE_history(MSE_history, alpha):
     plt.plot(MSE_history, label=f'Total MSE at each iteration, alpha = {alpha}')
     plt.xlabel("Iteration")
     plt.ylabel("Total MSE")
+    plt.legend()
+    plt.show()
+
+def plot_MSE_histories(MSE_histories, alphas):
+    for i in range(len(alphas)):
+        plt.plot(MSE_histories[i], label=f'Alpha = {alphas[i]}')
+    plt.xlabel("Iteration")
+    plt.ylabel("Total MSE")
+    plt.title("Scenario 1")
     plt.legend()
     plt.show()
 
@@ -225,3 +235,17 @@ data = [class_1,class_2,class_3]
 
 #plot_histogram2(data)
 #plot_dimensions_XY(data, name_vector)
+def plot_confusion_matrix(conf_matrix):
+    plt.figure(figsize=(10, 8))
+    sns.set(font_scale=1.6)  # Adjust font scale for better readability
+    sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False)
+
+    # Customize tick labels
+    tick_labels = ['Class 1', 'Class 2', 'Class 3']
+    plt.xticks(np.arange(3) + 0.5, tick_labels, rotation=0)
+    plt.yticks(np.arange(3) + 0.5, tick_labels, rotation=0)
+
+    plt.xlabel('Classified Flower')
+    plt.ylabel('True Flower')
+    plt.title('Confusion Matrix: Scenario 1')
+    plt.show()
