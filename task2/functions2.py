@@ -32,19 +32,19 @@ def load_mnist_labels(file_path):
     labels = np.frombuffer(raw_data, dtype=np.uint8)
     return labels
 
-def plot_confusion_matrix(conf_matrix):
+def plot_confusion_matrix(conf_matrix, title):
     plt.figure(figsize=(10, 8))
     sns.set(font_scale=1.2)  # Adjust font scale for better readability
     sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False)
 
     # Customize tick labels
-    tick_labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    plt.xticks(np.arange(9) + 0.5, tick_labels, rotation=0)
-    plt.yticks(np.arange(9) + 0.5, tick_labels, rotation=0)
+    tick_labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    plt.xticks(np.arange(10) + 0.5, tick_labels, rotation=0)
+    plt.yticks(np.arange(10) + 0.5, tick_labels, rotation=0)
 
     plt.xlabel('Classified image')
     plt.ylabel('True image')
-    plt.title('Confusion Matrix')
+    plt.title(title)
     plt.show()
 
 def plot_number(number_vector, title=None):
@@ -90,6 +90,7 @@ def classifyKNN(test_images, test_labels, reference_images, reference_labels, K=
     differences = []
 
     for i in range(len(test_images)):
+        print(f'i: {i}')
         #Contains all distances regarding image i
         distances = []
         actual_image = test_labels[i]

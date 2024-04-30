@@ -121,6 +121,29 @@ def plot_spider_web(W):
 
     plt.show()
 
+def plot_parallel_coordinates(W):
+    num_classes = len(W)
+    num_dimensions = len(W[0])
+    colors = ['red', 'green', 'blue']  # You can extend this list for more classes
+
+    plt.figure(figsize=(10, 5))
+
+    # Plot parallel coordinates for each class
+    for i in range(num_classes):
+        class_weights = W[i]
+        for j in range(num_dimensions):
+            feature_values = class_weights[:]
+            plt.plot(range(num_dimensions), feature_values, color=colors[i], alpha=0.5)
+        plt.plot([], [], color=colors[i], label=f'Class {i+1}')  # Dummy plot for legend
+
+    plt.title('Parallel Coordinates Plot')
+    plt.xlabel('Features')
+    plt.ylabel('Feature Values')
+    plt.xticks(range(num_dimensions), ['Petal Width', 'Constant'])  # Update feature names
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend(loc='upper right')
+    plt.show()
+
 def paralell_plot(data):
     num_dimensions = len(data[0][0])
     num_classes = len(data)
@@ -248,4 +271,92 @@ def plot_confusion_matrix(conf_matrix):
     plt.xlabel('Classified Flower')
     plt.ylabel('True Flower')
     plt.title('Confusion Matrix: Scenario 1')
+    plt.show()
+
+
+def plot_decision_rule_and_data_1D(W, data):
+    #remove the constant
+    max_value = 0
+    min_value = 0
+    for i in range(len(data)):
+        for j in range(len(data[i])):
+            data[i][j].pop()
+            if data[i][j][0] > max_value: max_value = data[i][j][0]
+            if data[i][j][0] < min_value: min_value = data[i][j][0]
+
+    resolution = 10000
+    x = np.linspace(min_value, max_value, resolution)
+
+    class_1_function = []
+    class_2_function = []
+    class_3_function = []
+    for i in range(len(x)):
+        class_1_function.append(W[0][0]*x[i] + W[0][1])
+        class_2_function.append(W[1][0]*x[i] + W[1][1])
+        class_3_function.append(W[2][0]*x[i] + W[2][1])
+
+    # Plot decision rule
+    plt.plot(x, class_1_function, color='Red',  linewidth=2, label='$\mathregular{z_0 = W_{00}\cdot[Petal Width] + W_{01}}$')
+    plt.plot(x, class_2_function, color='Green', linewidth=2, label='$\mathregular{z_1 = W_{10}\cdot[Petal Width] + W_{11}}$')
+    plt.plot(x, class_3_function, color='Blue',  linewidth=2, label='$\mathregular{z_2 = W_{20}\cdot[Petal Width] + W_{21}}$')
+
+    num_samples = len(data[0])
+    
+    y_coordinates = [0]*num_samples
+    plt.scatter(data[0], y_coordinates,marker = 'o', label=f'Class 1', color='Red')
+    plt.scatter(data[1], y_coordinates,marker = ',', label=f'Class 2', color='Green')
+    plt.scatter(data[2], y_coordinates,marker = 'v', label=f'Class 3', color='Blue')
+
+    plt.xlabel('Petal Width')
+    plt.ylabel('Z value')
+    plt.title('Decision Rule and Data in 1D')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_decision_rule_and_data_2D(W, data):
+    #remove the constant
+    max_value_x = data[0][0][0]
+    min_value_x = data[0][0][0]
+    max_value_y = data[0][0][1]
+    min_value_y = data[0][0][1]
+    for i in range(len(data)):
+        for j in range(len(data[i])):
+            data[i][j].pop()
+            if data[i][j][0] > max_value_x: max_value_x = data[i][j][0]
+            if data[i][j][0] < min_value_x: min_value_x = data[i][j][0]
+            if data[i][j][1] > max_value_y: max_value_y = data[i][j][1]
+            if data[i][j][1] < min_value_y: min_value_y = data[i][j][1]
+    
+    resolution = 10000
+    x = np.linspace(min_value_x, max_value_x, resolution)
+    y = np.linspace(min_value_y, max_value_y, resolution)
+    
+    EnOgTo = []
+    EnOgTre = []
+    ToOgTre = []
+    for i in range(len(x)):
+        EnOgTo.append(x[i]*(W[0][0]-W[1][0])/(W[1][1]-W[0][1]) +(W[0][2]-W[1][2])/(W[1][1]-W[0][1]))
+        EnOgTre.append(x[i]*(W[0][0]-W[2][0])/(W[2][1]-W[0][1]) +(W[0][2]-W[2][2])/(W[2][1]-W[0][1]))
+        ToOgTre.append(x[i]*(W[1][0]-W[2][0])/(W[2][1]-W[1][1]) +(W[1][2]-W[2][2])/(W[2][1]-W[1][1]))
+
+    y_coordinates = [sample[1] for sample in data[0]]
+    x_coordinates = [sample[0] for sample in data[0]]  # Extract x coordinates for class 1
+    plt.scatter(x_coordinates, y_coordinates, marker='o', label='Class 1', color='Red')
+    y_coordinates = [sample[1] for sample in data[1]]
+    x_coordinates = [sample[0] for sample in data[1]]  # Extract x coordinates for class 2
+    plt.scatter(x_coordinates, y_coordinates, marker=',', label='Class 2', color='Green')
+    y_coordinates = [sample[1] for sample in data[2]]
+    x_coordinates = [sample[0] for sample in data[2]]  # Extract x coordinates for class 3
+    plt.scatter(x_coordinates, y_coordinates, marker='v', label='Class 3', color='Blue')
+
+    plt.plot(x, EnOgTo, color='Red',  linewidth=2, label='$\mathregular{z_0 = z_1}$')
+    plt.plot(x, EnOgTre, color='Green',  linewidth=2, label='$\mathregular{z_0 = z_2}$')
+    plt.plot(x, ToOgTre, color='Blue',  linewidth=2, label='$\mathregular{z_1 = z_2}$')
+
+    plt.xlabel('Petal Length')
+    plt.ylabel('Petal Width')
+    plt.title('Decision Rule and Data in 2D')
+    plt.legend()
+    plt.grid(True)
     plt.show()
